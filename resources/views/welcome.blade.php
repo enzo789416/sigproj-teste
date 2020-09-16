@@ -68,16 +68,17 @@
         <div class="container">
             <div class="content ">
                 <div class="title">
-                    My Notions <img src="https://freesvg.org/img/1488216538.png" widht="100px" height="100px" alt="">
+                    SISTEMA DE VOTAÇÃO <img src="https://s3-sa-east-1.amazonaws.com/projetos-artes/fullsize%2F2016%2F07%2F08%2F18%2FLogo-188692_290593_183327325_521631295.jpg" widht="100px" height="100px" alt="">
                     @if (Route::has('login'))
                     <div class="links">
                         @auth
-                            <a href="{{ url('/home') }}">Home</a>
+                            <a href="{{ url('/admin/user') }}">Administrar Usuarios</a>
+                            <a href="{{ url('/admin/poll') }}">Administrar Enquetes</a>
                         @else
-                            <a href="{{ route('login') }}">Login</a>
+                            <a href="{{ route('login') }}">Entra</a>
 
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}">Register</a>
+                                <a href="{{ route('register') }}">Registrar-se</a>
                             @endif
                         @endauth
                     </div>

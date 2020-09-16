@@ -24,7 +24,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('My Notions', 'My Notions') }}
+                    {{ config('Painel', 'Painel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -77,10 +77,26 @@
             </div>
         </nav>
 
+        <div class="container">
+            <div class="d-flex bd-highlight">
+                <div class="p-2 flex-fill bd-highlight">
+                        <ul class="list-group">
+                          <li class="list-group-item"><h4 class="text-center">Menu</h4></li>
+                          <li class="list-group-item"><a href="{!! url('/') !!}">Todas as Enquetes</a></li>
+                          <li class="list-group-item"><a href="{!! url('painel/adicionar-tema') !!}">Enquetes Não Iniciadas</a></li>
+                            <li class="list-group-item"><a href="{!! url('painel/meus-temas') !!}">Enquetes Em Andamento</a></li>
+                            <li class="list-group-item"><a href="{!! url('painel/listar-temas') !!}">Enquetes Finalizadas</a></li>
+                </div>
+                <div class="p-2 w-100 bd-highlight">
+                    @yield('content')
+                </div>
+            </div>
+        </div>
+
+
         <main class="py-4">
             <div class="container">
                 @include('partials.alerts')
-                @yield('content')
             </div>
 
         </main>

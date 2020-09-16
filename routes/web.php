@@ -27,4 +27,9 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:mana
     Route::resource('/user', 'UserController', ['except' => ['show','create','store']]);
 });
 
+Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-polls')->group(function(){
+    Route::resource('/poll', 'PollController');
+});
+
+
 
