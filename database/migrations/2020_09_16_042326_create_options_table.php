@@ -16,7 +16,7 @@ class CreateOptionsTable extends Migration
         Schema::create('options', function (Blueprint $table) {
             $table->id();
             $table->string('opcao');
-            $table->integer('qtd_votos');
+            $table->integer('qtd_votos')->nullable();
             $table->integer('polls_id')->unsigned();
             $table->softDeletes();
             $table->timestamps();
