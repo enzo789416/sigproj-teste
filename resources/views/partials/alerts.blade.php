@@ -29,6 +29,6 @@
 @if ($errors->any())
 <div class="alert alert-danger">
     <button type="button" class="close" data-dismiss="alert">×</button>
-    Titulo ja cadastrado no banco, por favor insira outro
+    ocorreu alguma problema, tente novamente
 </div>
 @endif

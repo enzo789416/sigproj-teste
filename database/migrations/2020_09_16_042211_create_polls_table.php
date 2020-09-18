@@ -19,7 +19,6 @@ class CreatePollsTable extends Migration
             $table->dateTime('data_inicio');
             $table->dateTime('data_fim');
             $table->integer('user_id')->unsigned();
-            $table->softDeletes();
             $table->timestamps();
         });
     }
