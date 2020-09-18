@@ -17,7 +17,8 @@ class CreateOptionsTable extends Migration
             $table->id();
             $table->string('opcao');
             $table->integer('qtd_votos')->nullable();
-            $table->integer('polls_id')->unsigned();
+            $table->unsignedBigInteger('polls_id');
+            $table->foreign('polls_id')->references('id')->on('polls')->onDelete('cascade');
             $table->timestamps();
         });
     }

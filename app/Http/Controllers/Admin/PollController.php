@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Option;
 use App\Poll;
@@ -42,11 +43,12 @@ class PollController extends Controller
         $validatedData = $request->validate([
             'titulo' => 'required|unique:polls',
             [
-                'titulo.required'=> 'titulo ja cadastrado no banco, por favor insira outro', // custom message
+                'titulo.required' => 'titulo ja cadastrado no banco, por favor insira outro', // custom message
             ]
         ]);
-        $options = explode(",",$request->input('opcoes'));
-        if (count($options) >= 3 ){
+        $tira_espaco = str_replace(' ', '', $request->input('opcoes'));
+        $options = explode(",", $tira_espaco);
+        if (count($options) > 2) {
             $poll = new Poll;
             $poll->user_id = Auth::user()->id;
             $poll->titulo = request()->titulo;
@@ -58,51 +60,105 @@ class PollController extends Controller
             $dataFim = date('d-m-Y', strtotime($poll->data_fim));
 
             if (strtotime($dataIni) < strtotime(date('d-m-Y'))) {
-                return redirect()->route('admin.poll.create')->with('error','data de inicio não pode ser menor que a data atual');
-            }elseif (strtotime($dataIni) > strtotime($dataFim)) {
-                return redirect()->route('admin.poll.create')->with('error','data de inicio não pode ser maior que a data fim');
+                return redirect()->route('admin.poll.create')->with('error', 'data de inicio não pode ser menor que a data atual');
+            } elseif (strtotime($dataIni) > strtotime($dataFim)) {
+                return redirect()->route('admin.poll.create')->with('error', 'data de inicio não pode ser maior que a data fim');
             } elseif (strtotime($dataFim) < strtotime(date('d-m-Y'))) {
-                return redirect()->route('admin.poll.create')->with('error','data de fim não pode ser menor que a data atual');
-            }elseif (strtotime($dataIni) == strtotime($dataFim)) {
-                if (strtotime($horaIni) > strtotime($horaFim) ){ //hora de inicio nao pode ser maior que hora de fim
-                    return redirect()->route('admin.poll.create')->with('error','hora de inicio nao pode ser maior que hora de fim');
+                return redirect()->route('admin.poll.create')->with('error', 'data de fim não pode ser menor que a data atual');
+            } elseif (strtotime($dataIni) == strtotime($dataFim)) {
+                if (strtotime($horaIni) > strtotime($horaFim)) { //hora de inicio nao pode ser maior que hora de fim
+                    return redirect()->route('admin.poll.create')->with('error', 'hora de inicio nao pode ser maior que hora de fim');
                 }
-                if(strtotime($horaFim) < strtotime($horaIni)){ //hora de fim nao pode ser menor que hora de inicio
-                    return redirect()->route('admin.poll.create')->with('error','hora de fim nao pode ser menor que hora de inicio');
+                if (strtotime($horaFim) < strtotime($horaIni)) { //hora de fim nao pode ser menor que hora de inicio
+                    return redirect()->route('admin.poll.create')->with('error', 'hora de fim nao pode ser menor que hora de inicio');
                 }
-                if (strtotime($horaFim) == strtotime($horaIni)){
-                    return redirect()->route('admin.poll.create')->with('error','hora de fim nao pode ser igual hora de inicio');
+                if (strtotime($horaFim) == strtotime($horaIni)) {
+                    return redirect()->route('admin.poll.create')->with('error', 'hora de fim nao pode ser igual hora de inicio');
                 }
             }
 
             $poll->save();
-            foreach ($options as $key => $value){
+            foreach ($options as $key => $value) {
 
                 $option = new Option;
                 $option->polls_id = $poll->id;
                 $option->opcao = $value;
                 $option->save();
             }
-            return redirect()->route('admin.poll.index');
-        }else{
-            return redirect()->route('admin.poll.create')->with('error','devem ser cadastrados no minimo 3 opções');
+            return redirect()->route('admin.poll.index')->with('sucess', 'cadastrado com sucesso');
+        } else {
+            return redirect()->route('admin.poll.create')->with('error', 'devem ser cadastrados no minimo 3 opções');
         }
     }
 
     public function edit(Poll $poll)
     {
-        $options = Option::where('polls_id', '=', $poll->id )->get();
+        $options = Option::where('polls_id', '=', $poll->id)->get();
         // $ops = $options->implode("opcao",",");
 
-        return view('admin.poll.edit')->with(['poll' => $poll, 'options'=>$options]);
+        return view('admin.poll.edit')->with(['poll' => $poll, 'options' => $options]);
     }
 
-    public function update(Request $request, Poll $poll)
+    public function update(Request $request, Poll $poll, Option $opt)
     {
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->save();
-        return redirect()->route('admin.user.index')->with('success',$user->name.' has updated successfully!');
+        $pol = Poll::find($poll->id);
+        // $options = Option::where('polls_id', '=', $poll->id)->get();
+        // $cases = [];
+        // $ids = [];
+        // $params = [];
+        $options = Option::find($opt->id);
+        if (isset($pol) && isset($options)) {
+
+            $tira_espaco = str_replace(' ', '', $request->input('opcoes'));
+            $opt = explode(",", $tira_espaco);
+            if (count($opt) > 2) {
+
+                $pol->user_id = Auth::user()->id;
+                $pol->titulo = request()->titulo;
+                $pol->data_inicio = request()->data_inicio;
+                $pol->data_fim = request()->data_fim;
+                $dataIni = date('d-m-Y', strtotime($pol->data_inicio));
+                $horaIni = date('H:i', strtotime($pol->data_inicio));
+                $horaFim = date('H:i', strtotime($pol->data_fim));
+                $dataFim = date('d-m-Y', strtotime($pol->data_fim));
+
+                if (strtotime($dataIni) < strtotime(date('d-m-Y'))) {
+                    return redirect()->route('admin.poll.edit', $poll)->with('error', 'data de inicio não pode ser menor que a data atual');
+                } elseif (strtotime($dataIni) > strtotime($dataFim)) {
+                    return redirect()->route('admin.poll.edit', $poll)->with('error', 'data de inicio não pode ser maior que a data fim');
+                } elseif (strtotime($dataFim) < strtotime(date('d-m-Y'))) {
+                    return redirect()->route('admin.poll.edit', $poll)->with('error', 'data de fim não pode ser menor que a data atual');
+                } elseif (strtotime($dataIni) == strtotime($dataFim)) {
+                    if (strtotime($horaIni) > strtotime($horaFim)) { //hora de inicio nao pode ser maior que hora de fim
+                        return redirect()->route('admin.poll.edit', $poll)->with('error', 'hora de inicio nao pode ser maior que hora de fim');
+                    }
+                    if (strtotime($horaFim) < strtotime($horaIni)) { //hora de fim nao pode ser menor que hora de inicio
+                        return redirect()->route('admin.poll.edit', $poll)->with('error', 'hora de fim nao pode ser menor que hora de inicio');
+                    }
+                    if (strtotime($horaFim) == strtotime($horaIni)) {
+                        return redirect()->route('admin.poll.edit', $poll)->with('error', 'hora de fim nao pode ser igual hora de inicio');
+                    }
+                }
+
+                $pol->save();
+                // foreach  ($options as $id_key => $dados) {
+                //     Poll::where(['id' => $id_key])->update($dados);
+                // }
+                foreach ($options as $id => $value) {
+                    // $id = (int) $id;
+                    // $cases[] = "WHEN {$id} then ?";
+                    // $params[] = $value;
+                    // $ids[] = $id;
+                    $options->polls_id = $poll->id;
+                    $options->opcao = $value;
+                    $options->save();
+                }
+                // DB::update("UPDATE `options` SET `value` = CASE `id` {$cases} END, `updated_at` = ? WHERE `id` in ({$ids})", $params);
+                return redirect()->route('admin.poll.index')->with('sucess', 'atualizado com sucesso');
+            } else {
+                return redirect()->route('admin.poll.edit', $poll)->with('error', 'devem ser cadastrados no minimo 3 opções');
+            }
+        }
     }
 
 
@@ -111,6 +167,6 @@ class PollController extends Controller
     {
 
         $poll->delete();
-        return redirect()->route('admin.poll.index')->with('error', $poll->titulo.' has deleted successfully');
+        return redirect()->route('admin.poll.index')->with('error', $poll->titulo . ' has deleted successfully');
     }
 }
