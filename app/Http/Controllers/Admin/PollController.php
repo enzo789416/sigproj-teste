@@ -85,7 +85,7 @@ class PollController extends Controller
                 $option->opcao = $value;
                 $option->save();
             }
-            return redirect()->route('admin.poll.index')->with('sucess', 'cadastrado com sucesso');
+            return redirect()->route('admin.poll.index')->with('success', 'cadastrado com sucesso');
         } else {
             return redirect()->route('admin.poll.create')->with('error', 'devem ser cadastrados no minimo 3 opções');
         }
@@ -99,14 +99,14 @@ class PollController extends Controller
         return view('admin.poll.edit')->with(['poll' => $poll, 'options' => $options]);
     }
 
-    public function update(Request $request, Poll $poll, Option $opt)
+    public function update(Request $request, Poll $poll)
     {
         $pol = Poll::find($poll->id);
         // $options = Option::where('polls_id', '=', $poll->id)->get();
         // $cases = [];
         // $ids = [];
         // $params = [];
-        $options = Option::find($opt->id);
+        $options = Option::find($poll->id);
         if (isset($pol) && isset($options)) {
 
             $tira_espaco = str_replace(' ', '', $request->input('opcoes'));
@@ -144,17 +144,17 @@ class PollController extends Controller
                 // foreach  ($options as $id_key => $dados) {
                 //     Poll::where(['id' => $id_key])->update($dados);
                 // }
-                foreach ($options as $id => $value) {
-                    // $id = (int) $id;
-                    // $cases[] = "WHEN {$id} then ?";
-                    // $params[] = $value;
-                    // $ids[] = $id;
-                    $options->polls_id = $poll->id;
-                    $options->opcao = $value;
-                    $options->save();
-                }
+                // foreach ($options as $id => $value) {
+                //     // $id = (int) $id;
+                //     // $cases[] = "WHEN {$id} then ?";
+                //     // $params[] = $value;
+                //     // $ids[] = $id;
+                //     $options->polls_id = $poll->id;
+                //     $options->opcao = $value;
+                //     $options->save();
+                // }
                 // DB::update("UPDATE `options` SET `value` = CASE `id` {$cases} END, `updated_at` = ? WHERE `id` in ({$ids})", $params);
-                return redirect()->route('admin.poll.index')->with('sucess', 'atualizado com sucesso');
+                return redirect()->route('admin.poll.index')->with('success', 'atualizado com sucesso');
             } else {
                 return redirect()->route('admin.poll.edit', $poll)->with('error', 'devem ser cadastrados no minimo 3 opções');
             }
