@@ -1,7 +1,7 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('content')
-    <?php use Carbon\Carbon; ?>
+<?php use Carbon\Carbon; ?>
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default ">
@@ -10,8 +10,8 @@
                 </div>
                 @if (Carbon::now() > $poll->data_inicio && Carbon::now() < $poll->data_fim)
                     <div class="d-flex justify-content-center">
-                        <form class="" action="{!!  url()->current() !!}" method="post">
-                            {!! csrf_field() !!}
+                        <form class="" action="{{ url()->current() }}" method="post">
+                            @csrf
                             {{ method_field('PUT') }}
                             <div class="panel-body">
                                 <p>Selecione um das opções abaixo:</p>
@@ -27,8 +27,8 @@
                     </div>
                 @else
                     <div class="d-flex justify-content-center">
-                        <form class="" action="{!!  url()->current() !!}" method="post">
-                            {!! csrf_field() !!}
+                        <form class="" action="{{ url()->current() }}" method="post">
+                            @csrf
                             {{ method_field('PUT') }}
                             <div class="panel-body">
                                 <p>A enquete abaixo ainda não está disponivel ou está expirada, verifique as datas da
@@ -36,20 +36,20 @@
                                 @foreach ($options ?? '' as $value)
                                     <p><input type="radio" disabled name="opcao" value="{{ $value->id }}">
                                         {{ $value->opcao }}
-                                        ({{ 'Total de votos: ' . $value->qtd_votos }})</p>
+                                        ({{ 'Total de votos: ' . $value->qtd_votos }})
+                                    </p>
                                 @endforeach
                             </div>
                             <div class="panel-footer ">
                                 <button type="submit" disabled class="btn btn-sm btn-success ">Votar</button>
                             </div>
                         </form>
+
                     </div>
                 @endif
+
             </div>
+
         </div>
-
     </div>
-
-
-
 @endsection

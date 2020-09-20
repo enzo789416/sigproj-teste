@@ -6,7 +6,7 @@
 
     <ul class="list-group">
         <li class="list-group-item">
-            <h4 class="text-center">Todas as Enquetes</h3>
+            <h4 class="text-center">Lista de Enquetes não iniciadas</h3>
         </li>
     </ul>
 
@@ -34,7 +34,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($polls ?? '' as $poll)
+                        @foreach ($pollsnaoiniciadas ?? '' as $poll)
                             <tr>
                                 <td>{{ $poll->id }}</td>
                                 <td>{{ $poll->titulo }}</td>

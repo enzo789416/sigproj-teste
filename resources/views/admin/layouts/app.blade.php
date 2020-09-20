@@ -111,22 +111,22 @@
         </nav>
 
         <div class="container">
-            <div class="d-flex bd-highlight">
-                <div class="p-2 flex-fill bd-highlight">
+            <div class="d-flex bd-highlight row">
+                <div class="p-2 flex-fill bd-highlight col-md-3 col-xs-12">
                     <ul class="list-group">
                         <li class="list-group-item">
                             <h4 class="text-center">Menu</h4>
                         </li>
-                        <li class="list-group-item"><a href="{{ route('admin.poll.index') }}">Todas as Enquetes</a></li>
                         <li class="list-group-item"><a href="{{ route('admin.poll.create') }}">Criar Enquete</a></li>
-                        <li class="list-group-item"><a href="{!!  url('painel/adicionar-tema') !!}">Enquetes Não
+                        <li class="list-group-item"><a href="{{ route('admin.poll.index') }}">Todas as Enquetes</a></li>
+                        <li class="list-group-item"><a href="{{route('admin.poll.naoIniciada') }}">Enquetes Não
                                 Iniciadas</a></li>
-                        <li class="list-group-item"><a href="{!!  url('painel/meus-temas') !!}">Enquetes Em
+                        <li class="list-group-item"><a href="{{route('admin.poll.emAndamento') }}">Enquetes Em
                                 Andamento</a></li>
-                        <li class="list-group-item"><a href="{!!  url('painel/listar-temas') !!}">Enquetes
+                        <li class="list-group-item"><a href="{{route('admin.poll.finalizadas') }}">Enquetes
                                 Finalizadas</a></li>
                 </div>
-                <div class="p-2 w-100 bd-highlight">
+                <div class="p-2 w-100 bd-highlight col-md-9 col-xs-12">
                     @yield('content')
                 </div>
             </div>

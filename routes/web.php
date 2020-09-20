@@ -20,7 +20,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('/home', 'HomeController')->except([
+    'create', 'edit', 'store', 'destroy'
+]);
+// Route::get('/enquete/{enquete}', 'HomeController@show')->name('enquete');
 
 
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function(){
@@ -28,6 +31,9 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:mana
 });
 
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-polls')->group(function(){
+    Route::get('poll/nao_iniciadas', 'PollController@listNaoInciadas')->name('poll.naoIniciada');
+    Route::get('poll/emAndamento', 'PollController@emAndamento')->name('poll.emAndamento');
+    Route::get('poll/finalizadas', 'PollController@finalizadas')->name('poll.finalizadas');
     Route::resource('/poll', 'PollController');
 });
 
