@@ -15,7 +15,8 @@
             <div class="card-body">
                 {{-- <div class="form-group row">
                     <div class="col-md-6 mb-4">
-                        <a class="btn btn-success" href="{{ route('admin.poll.create') }}" id="createPoll" role="button">Cadastrar Nova
+                        <a class="btn btn-success" href="{{ route('admin.poll.create') }}" id="createPoll"
+                            role="button">Cadastrar Nova
                             enquete</a>
                     </div>
                 </div> --}}
@@ -27,6 +28,7 @@
                             <th>Nome</th>
                             <th>data_inicio</th>
                             <th>data_fim</th>
+                            <th>visualizar</th>
                             <th>Editar</th>
                             <th>Deletar</th>
                         </tr>
@@ -38,14 +40,22 @@
                                 <td>{{ $poll->titulo }}</td>
                                 <td>{{ date('d-m-Y H:i', strtotime($poll->data_inicio)) }}</td>
                                 <td>{{ date('d-m-Y H:i', strtotime($poll->data_fim)) }}</td>
-                                <td><a class="btn btn-warning" href="{{route('admin.poll.edit', $poll->id)}}" role="button">
+                                <td><a class="btn btn-info d-flex justify-content-center" href="{{ route('admin.poll.show', $poll->id) }}"
+                                        role="button">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                                <td><a class="btn btn-warning d-flex justify-content-center" href="{{ route('admin.poll.edit', $poll->id) }}"
+                                        role="button">
                                         <i class="fas fa-edit"></i>
-                                    </a></td>
+                                    </a>
+                                </td>
                                 <td>
-                                    <form action="{{route('admin.poll.destroy', $poll)}}" id="deletePoll" method="POST" class="float-left">
+                                    <form action="{{ route('admin.poll.destroy', $poll) }}" id="deletePoll" method="POST"
+                                        class="d-flex justify-content-center">
                                         @csrf
-                                        {{method_field('DELETE')}}
-                                        <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                        {{ method_field('DELETE') }}
+                                        <button type="submit" class="btn btn-danger d-flex justify-content-center"><i class="fa fa-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -68,29 +78,30 @@
                             <label for="">Título:</label>
                             <input type="text" class="form-control" name="titulo" required>
                             <small class="help-block">Digite o título para a enquete.</small>
-                          </div>
+                        </div>
 
-                          <div class="form-group">
+                        <div class="form-group">
                             <label for="">Data e hora de Inicio:</label>
                             <input type="datetime-local" class="form-control" name="data_inicio" required>
                             <small class="help-block">Digite a data e hora de inicio da votação.</small>
-                          </div>
+                        </div>
 
-                          <div class="form-group">
+                        <div class="form-group">
                             <label for="">Data e hora de Fim:</label>
                             <input type="datetime-local" class="form-control" name="data_fim" required>
                             <small class="help-block">Digite a data e hora de fim da votação.</small>
-                          </div>
+                        </div>
 
-                          <div class="form-group">
+                        <div class="form-group">
                             <label for="">Opções:</label>
                             <input type="text" class="form-control" name="opcoes" required>
-                            <small class="help-block">Digite no minimo 3 opções para a votação separando por vírgula(,).<br>Exemplo: text-1,text-2,text-3.</small>
-                          </div>
+                            <small class="help-block">Digite no minimo 3 opções para a votação separando por
+                                vírgula(,).<br>Exemplo: text-1,text-2,text-3.</small>
+                        </div>
 
                         <div class="col-sm-offset-2 col-sm-10">
-                         <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
-                         </button>
+                            <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
+                            </button>
                         </div>
                     </form>
                 </div>

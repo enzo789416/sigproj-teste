@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Option;
 use App\Poll;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -26,6 +27,9 @@ class HomeController extends Controller
     public function index()
     {
         $polls = Poll::all();
-        return view('home')->with('polls', $polls);
+        $poll = Poll::all();
+        $pollsfinalizados = Poll::where('data_fim', '<',Carbon::now())->get();
+        $pollsnaoiniciadas = Poll::where('data_inicio', '>',Carbon::now())->get();
+        return view('home')->with(['polls' => $polls,'pollsfinalizados' => $pollsfinalizados, 'pollsnaoiniciadas'=>$pollsnaoiniciadas]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Option;
 use App\Poll;
+use Carbon\Carbon;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -38,6 +39,14 @@ class PollController extends Controller
         return view('admin.poll.create');
     }
 
+    public function show(Poll $poll)
+    {
+        $options = Option::where('polls_id', '=',$poll->id)->orderBy('id','asc')->get();
+        $total = Option::where('polls_id','=',$poll->id)->sum('qtd_votos');
+        return view('admin.poll.show')
+        ->with(['poll' => $poll, 'options' => $options,'total'=>$total ]);
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -59,23 +68,43 @@ class PollController extends Controller
             $horaFim = date('H:i', strtotime($poll->data_fim));
             $dataFim = date('d-m-Y', strtotime($poll->data_fim));
 
-            if (strtotime($dataIni) < strtotime(date('d-m-Y'))) {
+            // if (strtotime($dataIni) < strtotime(date('d-m-Y'))) {
+            //     return redirect()->route('admin.poll.create')->with('error', 'data de inicio não pode ser menor que a data atual');
+            // } elseif (strtotime($dataIni) > strtotime($dataFim)) {
+            //     return redirect()->route('admin.poll.create')->with('error', 'data de inicio não pode ser maior que a data fim');
+            // } elseif (strtotime($dataFim) < strtotime(date('d-m-Y'))) {
+            //     return redirect()->route('admin.poll.create')->with('error', 'data de fim não pode ser menor que a data atual');
+            // } elseif (strtotime($dataIni) == strtotime($dataFim)) {
+            //     if (strtotime($horaIni) > strtotime($horaFim)) { //hora de inicio nao pode ser maior que hora de fim
+            //         return redirect()->route('admin.poll.create')->with('error', 'hora de inicio nao pode ser maior que hora de fim');
+            //     }
+            //     if (strtotime($horaFim) < strtotime($horaIni)) { //hora de fim nao pode ser menor que hora de inicio
+            //         return redirect()->route('admin.poll.create')->with('error', 'hora de fim nao pode ser menor que hora de inicio');
+            //     }
+            //     if (strtotime($horaFim) == strtotime($horaIni)) {
+            //         return redirect()->route('admin.poll.create')->with('error', 'hora de fim nao pode ser igual hora de inicio');
+            //     }
+            // }
+
+            if ($poll->data_inicio < Carbon::now()) {
                 return redirect()->route('admin.poll.create')->with('error', 'data de inicio não pode ser menor que a data atual');
-            } elseif (strtotime($dataIni) > strtotime($dataFim)) {
+            } elseif ($poll->data_inicio > $poll->data_fim) {
                 return redirect()->route('admin.poll.create')->with('error', 'data de inicio não pode ser maior que a data fim');
-            } elseif (strtotime($dataFim) < strtotime(date('d-m-Y'))) {
+            } elseif ($poll->data_fim < Carbon::now()) {
                 return redirect()->route('admin.poll.create')->with('error', 'data de fim não pode ser menor que a data atual');
-            } elseif (strtotime($dataIni) == strtotime($dataFim)) {
-                if (strtotime($horaIni) > strtotime($horaFim)) { //hora de inicio nao pode ser maior que hora de fim
+            } elseif ($poll->data_inicio == $poll->data_fim) {
+                if ($horaIni > $horaFim) { //hora de inicio nao pode ser maior que hora de fim
                     return redirect()->route('admin.poll.create')->with('error', 'hora de inicio nao pode ser maior que hora de fim');
                 }
-                if (strtotime($horaFim) < strtotime($horaIni)) { //hora de fim nao pode ser menor que hora de inicio
+                if ($horaFim < $horaIni) { //hora de fim nao pode ser menor que hora de inicio
                     return redirect()->route('admin.poll.create')->with('error', 'hora de fim nao pode ser menor que hora de inicio');
                 }
-                if (strtotime($horaFim) == strtotime($horaIni)) {
+                if ($horaFim == $horaIni) {
                     return redirect()->route('admin.poll.create')->with('error', 'hora de fim nao pode ser igual hora de inicio');
                 }
             }
+
+
 
             $poll->save();
             foreach ($options as $key => $value) {
@@ -102,11 +131,11 @@ class PollController extends Controller
     public function update(Request $request, Poll $poll)
     {
         $pol = Poll::find($poll->id);
-        // $options = Option::where('polls_id', '=', $poll->id)->get();
+        $options = Option::where('polls_id', '=', $poll->id)->get();
         // $cases = [];
         // $ids = [];
         // $params = [];
-        $options = Option::find($poll->id);
+        // $options = Option::find($poll->id);
         if (isset($pol) && isset($options)) {
 
             $tira_espaco = str_replace(' ', '', $request->input('opcoes'));
@@ -122,21 +151,21 @@ class PollController extends Controller
                 $horaFim = date('H:i', strtotime($pol->data_fim));
                 $dataFim = date('d-m-Y', strtotime($pol->data_fim));
 
-                if (strtotime($dataIni) < strtotime(date('d-m-Y'))) {
-                    return redirect()->route('admin.poll.edit', $poll)->with('error', 'data de inicio não pode ser menor que a data atual');
-                } elseif (strtotime($dataIni) > strtotime($dataFim)) {
-                    return redirect()->route('admin.poll.edit', $poll)->with('error', 'data de inicio não pode ser maior que a data fim');
-                } elseif (strtotime($dataFim) < strtotime(date('d-m-Y'))) {
-                    return redirect()->route('admin.poll.edit', $poll)->with('error', 'data de fim não pode ser menor que a data atual');
-                } elseif (strtotime($dataIni) == strtotime($dataFim)) {
-                    if (strtotime($horaIni) > strtotime($horaFim)) { //hora de inicio nao pode ser maior que hora de fim
-                        return redirect()->route('admin.poll.edit', $poll)->with('error', 'hora de inicio nao pode ser maior que hora de fim');
+                if ($poll->data_inicio < Carbon::now()) {
+                    return redirect()->route('admin.poll.create')->with('error', 'data de inicio não pode ser menor que a data atual');
+                } elseif ($poll->data_inicio > $poll->data_fim) {
+                    return redirect()->route('admin.poll.create')->with('error', 'data de inicio não pode ser maior que a data fim');
+                } elseif ($poll->data_fim < Carbon::now()) {
+                    return redirect()->route('admin.poll.create')->with('error', 'data de fim não pode ser menor que a data atual');
+                } elseif ($poll->data_inicio == $poll->data_fim) {
+                    if ($horaIni > $horaFim) { //hora de inicio nao pode ser maior que hora de fim
+                        return redirect()->route('admin.poll.create')->with('error', 'hora de inicio nao pode ser maior que hora de fim');
                     }
-                    if (strtotime($horaFim) < strtotime($horaIni)) { //hora de fim nao pode ser menor que hora de inicio
-                        return redirect()->route('admin.poll.edit', $poll)->with('error', 'hora de fim nao pode ser menor que hora de inicio');
+                    if ($horaFim < $horaIni) { //hora de fim nao pode ser menor que hora de inicio
+                        return redirect()->route('admin.poll.create')->with('error', 'hora de fim nao pode ser menor que hora de inicio');
                     }
-                    if (strtotime($horaFim) == strtotime($horaIni)) {
-                        return redirect()->route('admin.poll.edit', $poll)->with('error', 'hora de fim nao pode ser igual hora de inicio');
+                    if ($horaFim == $horaIni) {
+                        return redirect()->route('admin.poll.create')->with('error', 'hora de fim nao pode ser igual hora de inicio');
                     }
                 }
 
@@ -165,7 +194,6 @@ class PollController extends Controller
 
     public function destroy(Poll $poll)
     {
-
         $poll->delete();
         return redirect()->route('admin.poll.index')->with('error', $poll->titulo . ' has deleted successfully');
     }
