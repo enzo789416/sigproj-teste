@@ -67,5 +67,8 @@
 ![sistema de votocao pagina listar enquete mobile](https://user-images.githubusercontent.com/41880119/93732060-04174c00-fba6-11ea-9828-ff5b14334a52.png)
 sistema de busca em liste de enquetes
 ![busca em lista enquete](https://user-images.githubusercontent.com/41880119/93732061-04174c00-fba6-11ea-968e-56654a70fc0c.png)
+- Diagrama banco de dados
+![banco de dados](https://user-images.githubusercontent.com/41880119/93732549-39249e00-fba8-11ea-9ff3-c65748d1726c.png)
+
 
 # Muito obrigado pela oportunidade!
