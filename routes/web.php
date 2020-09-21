@@ -20,22 +20,24 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::resource('/home', 'HomeController')->except([
-    'create', 'edit', 'store', 'destroy'
-]);
+
+
+Route::middleware('can:vote')->group(function () {
+    Route::resource('/home', 'HomeController')->except([
+        'create', 'edit', 'store', 'destroy'
+    ]);
+});
 // Route::get('/enquete/{enquete}', 'HomeController@show')->name('enquete');
 
 
-Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function(){
-    Route::resource('/user', 'UserController', ['except' => ['show','create','store']]);
+Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function () {
+    Route::resource('/user', 'UserController', ['except' => ['show', 'create', 'store']]);
 });
 
-Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-polls')->group(function(){
+Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-polls')->group(function () {
     Route::get('poll/nao_iniciadas', 'PollController@listNaoInciadas')->name('poll.naoIniciada');
     Route::get('poll/emAndamento', 'PollController@emAndamento')->name('poll.emAndamento');
     Route::get('poll/finalizadas', 'PollController@finalizadas')->name('poll.finalizadas');
+    // Route::get('poll/{poll}/options/{options}/edit', 'PollController@edit')->name('poll.edit');
     Route::resource('/poll', 'PollController');
 });
-
-
-

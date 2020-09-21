@@ -9,11 +9,11 @@ use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate as FacadesGate;
 
-class UserController extends Controller
-{
-    public function __construct()
+class UserController extends Controller //a ideia daqui é poder ter administração dos usuarios cadastrados no sistema assim controlando melhor quem faz o que
+{                                       //por mais que nao tenha sido pedido no teste achei legal colocar
+    public function __construct()       //alem disso este gerenciamento de usuarios é um projeto base que tenho onde uso todos para os projetos que faço
     {
-        $this->middleware('auth');
+        $this->middleware('auth'); //usuario tem que estar logado para acessar estas funcoes
     }
     /**
      * Display a listing of the resource.
@@ -22,7 +22,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::all(); //pega todos os usuarios e manda pra pagina inicial pra listar
         return view('admin.user.index')->with('users', $users);
     }
 
@@ -37,13 +37,15 @@ class UserController extends Controller
     public function edit(User $user)
     {
         if (FacadesGate::denies('edit-users')) {
-            return redirect(route('admin.user.index'));
+            return redirect(route('admin.user.index')); //editar usuario colocando funcoes novas ou retirando
         }
         $roles = Role::all();
         return view('admin.user.edit')->with(
-            ['user' => $user,
-            'roles' => $roles
-            ]);
+            [
+                'user' => $user,
+                'roles' => $roles
+            ]
+        );
     }
 
     /**
@@ -59,7 +61,7 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->save();
-        return redirect()->route('admin.user.index')->with('success',$user->name.' has updated successfully!');
+        return redirect()->route('admin.user.index')->with('success', $user->name . ' has updated successfully!'); //atualiza usuarios
     }
 
     /**
@@ -68,13 +70,13 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(User $user) //deletar alguma funcao ou usuario
     {
         if (FacadesGate::denies('delete-users')) {
             return redirect(route('admin.user.index'));
         }
         $user->roles()->detach();
         $user->delete();
-        return redirect()->route('admin.user.index')->with('error', $user->name.' has deleted successfully');
+        return redirect()->route('admin.user.index')->with('error', $user->name . ' has deleted successfully');
     }
 }

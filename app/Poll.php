@@ -8,6 +8,6 @@ class Poll extends Model
 {
     protected $table = "polls";
     protected $fillable = [
-        'titulo', 'data_inicio','data_fim'
+        'titulo', 'data_inicio', 'data_fim'
     ];
 }

@@ -21,23 +21,27 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot() //permissoes do sistema
     {
         $this->registerPolicies();
 
-        Gate::define('edit-users', function($user){
+        Gate::define('edit-users', function ($user) {
             return $user->hasRole('admin');
         });
 
-        Gate::define('manage-users', function($user){
+        Gate::define('manage-users', function ($user) {
             return $user->hasAnyRole(['admin', 'author']);
         });
 
-        Gate::define('manage-polls', function($user){
+        Gate::define('manage-polls', function ($user) {
             return $user->hasAnyRole(['admin', 'author']);
         });
 
-        Gate::define('delete-users', function($user){
+        Gate::define('vote', function ($user) {
+            return $user->hasAnyRole(['admin', 'author', 'user']);
+        });
+
+        Gate::define('delete-users', function ($user) {
             return $user->hasRole('admin');
         });
     }

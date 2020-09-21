@@ -70,10 +70,11 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-        $role = Role::select('id')->where('name','user')->first();
-        $user->roles()->attach($role);
+        // $role = Role::select('id')->where('name','user')->first();
+        // $user->roles()->attach($role);
+        //aqui o usuario quando cadastrado já vai ter a permissão de user direto, mas resolvi deixar comentado e fazer com que somente
+        // apos a permissao do administrador dando esse cargo de user ao usuario, que ele ira poder começar a usar o sistema votando no que quiser
 
         return $user;
-
     }
 }

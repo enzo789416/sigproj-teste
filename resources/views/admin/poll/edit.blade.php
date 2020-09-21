@@ -6,7 +6,7 @@
         </li>
     </ul>
 
-    <form action="{{ route('admin.poll.update', $poll) }}" method="post">
+    <form action="{{ route('admin.poll.update', array('poll' => $poll, 'options' => $options)) }}" method="post">
         @csrf
         {{ method_field('PUT') }}
         <div class="form-group">
